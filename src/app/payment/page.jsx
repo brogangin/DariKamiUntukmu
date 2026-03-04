@@ -1,5 +1,8 @@
 "use client";
 
+// Disable static prerendering for this dynamic page
+export const dynamic = "force-dynamic";
+
 import { useAuth } from "@/components/AuthProviderClient";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
