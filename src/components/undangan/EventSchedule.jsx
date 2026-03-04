@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Calendar, Clock, MapPin, Timer } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-const EventSchedule = () => {
+const EventSchedule = ({ invitation }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const sectionRef = useRef(null);
 
-    // Set wedding date - using a future Friday for countdown
-    const weddingDate = new Date("2025-08-15T12:00:00");
+    const weddingDate = invitation?.wedding_date
+        ? new Date(invitation.wedding_date + "T00:00:00")
+        : new Date("2025-08-15T12:00:00");
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -45,7 +46,9 @@ const EventSchedule = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [weddingDate]);
+
+    if (!invitation) return null;
 
     return (
         <section
@@ -63,7 +66,9 @@ const EventSchedule = () => {
 
                 {/* Countdown Timer */}
                 <div
-                    className={`mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+                    className={`mb-16 transition-all duration-1000 ${
+                        isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                    }`}
                 >
                     <div className="bg-gradient-to-r from-amber-400 to-amber-600 rounded-3xl p-8 shadow-2xl">
                         <div className="flex items-center justify-center gap-2 mb-6">
@@ -96,7 +101,9 @@ const EventSchedule = () => {
                 <div className="grid md:grid-cols-2 gap-8">
                     {/* Ceremony */}
                     <div
-                        className={`transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+                        className={`transition-all duration-1000 delay-200 ${
+                            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                        }`}
                     >
                         <Card className="border-2 border-amber-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                             <div className="bg-gradient-to-br from-amber-400 to-amber-600 p-6 text-center">
@@ -107,16 +114,18 @@ const EventSchedule = () => {
                                 <div className="flex items-center gap-4">
                                     <Clock className="w-6 h-6 text-amber-600 flex-shrink-0" />
                                     <div>
-                                        <p className="font-semibold text-gray-800">Jumat</p>
-                                        <p className="text-gray-600">12:00 - 13:00 WIB</p>
+                                        <p className="font-semibold text-gray-800">Waktu</p>
+                                        <p className="text-gray-600">
+                                            {invitation.ceremony_time || "--:-- WIB"}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
                                     <MapPin className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
                                     <div>
-                                        <p className="font-semibold text-gray-800">Jatim Expo</p>
+                                        <p className="font-semibold text-gray-800">Lokasi</p>
                                         <p className="text-gray-600 text-sm">
-                                            Grand City Convention Center
+                                            {invitation.ceremony_location || "Lokasi Akad"}
                                         </p>
                                     </div>
                                 </div>
@@ -126,7 +135,9 @@ const EventSchedule = () => {
 
                     {/* Reception */}
                     <div
-                        className={`transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+                        className={`transition-all duration-1000 delay-400 ${
+                            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                        }`}
                     >
                         <Card className="border-2 border-amber-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
                             <div className="bg-gradient-to-br from-amber-500 to-amber-700 p-6 text-center">
@@ -137,45 +148,24 @@ const EventSchedule = () => {
                                 <div className="flex items-center gap-4">
                                     <Clock className="w-6 h-6 text-amber-600 flex-shrink-0" />
                                     <div>
-                                        <p className="font-semibold text-gray-800">Jumat</p>
-                                        <p className="text-gray-600">15:00 - 17:00 WIB</p>
+                                        <p className="font-semibold text-gray-800">Waktu</p>
+                                        <p className="text-gray-600">
+                                            {invitation.reception_time || "--:-- WIB"}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
                                     <MapPin className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
                                     <div>
-                                        <p className="font-semibold text-gray-800">Jatim Expo</p>
+                                        <p className="font-semibold text-gray-800">Lokasi</p>
                                         <p className="text-gray-600 text-sm">
-                                            Grand City Convention Center
+                                            {invitation.reception_location || "Lokasi Resepsi"}
                                         </p>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
-                </div>
-
-                {/* Google Maps */}
-                <div
-                    className={`mt-12 transition-all duration-1000 delay-600 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-                >
-                    <Card className="overflow-hidden shadow-2xl border-none">
-                        <CardContent className="p-0">
-                            <div className="relative w-full h-96 rounded-lg overflow-hidden">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.3736642798643!2d112.75691631477547!3d-7.309506894729842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fbc9c0c0c0c1%3A0x1234567890abcdef!2sJatim%20Expo!5e0!3m2!1sen!2sid!4v1234567890123!5m2!1sen!2sid"
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: 0 }}
-                                    allowFullScreen=""
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    className="grayscale hover:grayscale-0 transition-all duration-500"
-                                    title="Wedding Venue Map"
-                                ></iframe>
-                            </div>
-                        </CardContent>
-                    </Card>
                 </div>
             </div>
         </section>

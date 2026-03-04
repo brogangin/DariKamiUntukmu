@@ -2,19 +2,38 @@ import React from "react";
 import { Heart, MapPin, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const Closing = () => {
+const Closing = ({ invitation }) => {
     const handleAddToCalendar = () => {
-        // Google Calendar URL
-        const title = "Pernikahan Adam & Hawa";
-        const details = "Akad Nikah dan Resepsi Pernikahan";
-        const location = "Jatim Expo, Grand City Convention Center";
-        const startDate = "20250815T120000Z";
-        const endDate = "20250815T170000Z";
+        if (!invitation?.wedding_date) return;
 
-        const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&dates=${startDate}/${endDate}`;
+        const date = new Date(invitation.wedding_date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        const ceremonyHour = invitation.ceremony_time?.split(" ")[0]?.split(":")[0] || "12";
+        const ceremonyMin = invitation.ceremony_time?.split(" ")[0]?.split(":")[1] || "00";
+        const receptionTime = invitation.reception_time?.split(" ")[0] || "15:00";
+        const receptionHour = receptionTime.split(":")[0];
+        const receptionMin = receptionTime.split(":")[1];
+
+        const startDate = `${year}${month}${day}T${ceremonyHour}${ceremonyMin}00Z`;
+        const endDate = `${year}${month}${day}T${receptionHour}${receptionMin}00Z`;
+
+        const title = `Pernikahan ${invitation.bride_name} & ${invitation.groom_name}`;
+        const details = "Akad Nikah dan Resepsi Pernikahan";
+        const location = invitation.ceremony_location || "Lokasi Pernikahan";
+
+        const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+            title,
+        )}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(
+            location,
+        )}&dates=${startDate}/${endDate}`;
 
         window.open(calendarUrl, "_blank");
     };
+
+    if (!invitation) return null;
 
     return (
         <section className="closing py-24 px-4 bg-gradient-to-b from-white to-amber-50">
@@ -53,9 +72,12 @@ const Closing = () => {
                     </Button>
 
                     <Button
-                        onClick={() =>
-                            window.open("https://www.google.com/maps/search/Jatim+Expo", "_blank")
-                        }
+                        onClick={() => {
+                            const url = `https://www.google.com/maps/search/${encodeURIComponent(
+                                invitation.ceremony_location || "Lokasi Pernikahan",
+                            )}`;
+                            window.open(url, "_blank");
+                        }}
                         variant="outline"
                         className="border-2 border-amber-600 text-amber-700 hover:bg-amber-50 px-8 py-6 text-lg rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
                     >
@@ -77,7 +99,9 @@ const Closing = () => {
                         <div className="h-px w-12 bg-amber-400"></div>
                     </div>
 
-                    <p className="mt-8 text-2xl font-serif text-gray-800">Adam & Hawa</p>
+                    <p className="mt-8 text-2xl font-serif text-gray-800">
+                        {invitation.bride_name} & {invitation.groom_name}
+                    </p>
                 </div>
             </div>
         </section>

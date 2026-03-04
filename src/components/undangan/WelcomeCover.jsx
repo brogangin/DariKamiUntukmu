@@ -2,7 +2,19 @@ import React from "react";
 import { Heart, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const WelcomeCover = ({ onOpen }) => {
+const WelcomeCover = ({ onOpen, invitation }) => {
+    const brideName = invitation?.bride_name || "Pengantin Wanita";
+    const groomName = invitation?.groom_name || "Pengantin Pria";
+    const ceremonyTime = invitation?.ceremony_time || "--:-- WIB";
+    const weddingDate = invitation?.wedding_date
+        ? new Date(invitation.wedding_date).toLocaleDateString("id-ID", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+          })
+        : "Tanggal Pernikahan";
+
     return (
         <div
             className="welcome-cover min-h-screen flex items-center justify-center relative overflow-hidden"
@@ -21,7 +33,7 @@ const WelcomeCover = ({ onOpen }) => {
                 </div>
 
                 <h1 className="text-6xl md:text-8xl font-serif text-white mb-4 tracking-wide">
-                    Adam & Hawa
+                    {brideName} & {groomName}
                 </h1>
 
                 <div className="flex items-center justify-center gap-4 mb-8">
@@ -34,7 +46,8 @@ const WelcomeCover = ({ onOpen }) => {
                     Undangan Pernikahan
                 </p>
 
-                <p className="text-lg text-amber-100 mb-12">Jumat, 12:00 WIB</p>
+                <p className="text-lg text-amber-100 mb-12">{weddingDate}</p>
+                <p className="text-lg text-amber-100 mb-12">{ceremonyTime}</p>
 
                 <Button
                     onClick={onOpen}

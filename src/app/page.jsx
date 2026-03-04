@@ -1,13 +1,13 @@
 import { supabase } from "@/lib/supabaseClient";
 
-import Header from "@/components/header";
-import Hero from "@/components/hero";
-import Features from "@/components/features";
-import Templates from "@/components/templates";
-import Pricing from "@/components/pricing";
-import About from "@/components/about";
-import Contact from "@/components/contact";
-import Footer from "@/components/footer";
+import Header from "@/components/landing/header";
+import Hero from "@/components/landing/hero";
+import Features from "@/components/landing/features";
+import Templates from "@/components/landing/templates";
+import Pricing from "@/components/landing/pricing";
+import About from "@/components/landing/about";
+import Contact from "@/components/landing/contact";
+import Footer from "@/components/landing/footer";
 
 export default function Home() {
     return (
