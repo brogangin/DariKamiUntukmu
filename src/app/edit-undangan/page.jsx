@@ -13,6 +13,9 @@ import WeddingInvitation from "@/components/undangan/WeddingInvitation";
 import LocationMapPicker from "@/components/LocationMapPicker";
 import ImageUploader from "@/components/ImageUploader";
 
+// Disable prerendering for this dynamic page
+export const dynamic = "force-dynamic";
+
 export default function EditUndanganPage() {
     const { user, supabase } = useAuth();
     const router = useRouter();
