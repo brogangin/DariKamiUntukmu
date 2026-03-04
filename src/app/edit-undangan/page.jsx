@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useAuth } from "@/components/AuthProviderClient";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,7 +17,7 @@ import ImageUploader from "@/components/ImageUploader";
 // Disable prerendering for this dynamic page
 export const dynamic = "force-dynamic";
 
-export default function EditUndanganPage() {
+function EditUndanganContent() {
     const { user, supabase } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -902,5 +903,17 @@ export default function EditUndanganPage() {
                 />
             )}
         </div>
+    );
+}
+
+export default function EditUndanganPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center min-h-screen">Loading...</div>
+            }
+        >
+            <EditUndanganContent />
+        </Suspense>
     );
 }
