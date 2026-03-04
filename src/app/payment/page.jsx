@@ -1,8 +1,6 @@
 "use client";
 
-// Disable static prerendering for this dynamic page
-export const dynamic = "force-dynamic";
-
+import { Suspense } from "react";
 import { useAuth } from "@/components/AuthProviderClient";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,7 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Heart, CheckCircle, Clock, AlertCircle, Download, Home } from "lucide-react";
 
-export default function PaymentPage() {
+// Disable static prerendering for this dynamic page
+export const dynamic = "force-dynamic";
+
+function PaymentContent() {
     const { user, supabase } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -481,5 +482,17 @@ export default function PaymentPage() {
             {/* Load Snap script */}
             <script src="https://app.sandbox.midtrans.com/snap/snap.js" async></script>
         </div>
+    );
+}
+
+export default function PaymentPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center min-h-screen">Loading...</div>
+            }
+        >
+            <PaymentContent />
+        </Suspense>
     );
 }
